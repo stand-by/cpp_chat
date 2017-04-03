@@ -1,6 +1,6 @@
 #include "UserList.hpp"
 
-UserList::UserList(): userlist(json({})), filename("userlist.txt") {};
+UserList::UserList(): userlist(json::array()), filename("userlist.txt") {};
 
 UserList::~UserList() {};
 
