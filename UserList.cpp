@@ -55,3 +55,19 @@ bool UserList::check_existance(string username) {
 
   	return is_exist;
 }
+
+bool UserList::check_thread(string username, int thread) {
+	bool is_exist = false;
+
+	for (json::iterator it = userlist.begin(); it != userlist.end(); ++it) {
+  		if((*it)["username"]==username) {
+  			vector<int> threads =  (*it)["threads"].get<std::vector<int> >();
+  			if(std::find(threads.begin(), threads.end(), thread) != threads.end()) {
+  				is_exist = true;
+  				break;
+  			}
+		}
+  	}
+
+  	return is_exist;
+}

@@ -1,7 +1,9 @@
+#include <algorithm>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <vector>
 #include "nlohmann_json/json.hpp"
 
 using namespace std;
@@ -26,4 +28,5 @@ public:
 	void print_json();
 	void add_user(string username, string password);
 	bool check_existance(string username);
+	bool check_thread(string username, int thread);
 };
