@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <string>
 #include "nlohmann_json/json.hpp"
@@ -19,6 +20,7 @@ public:
 	UserList();
 	~UserList();
 	void read_json();
+	void write_json();
 	void clear_json();
 	//method for debug purposes
 	void print_json();

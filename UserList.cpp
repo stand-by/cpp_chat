@@ -10,6 +10,12 @@ void UserList::read_json() {
 	if(input.is_open()) input.close();
 }
 
+void UserList::write_json() {
+	ofstream output(filename);
+	output << setw(4) << userlist << endl;
+	if(output.is_open()) output.close();
+}
+
 void UserList::clear_json() { 
 	if (!userlist.empty())
 		userlist.clear(); 
