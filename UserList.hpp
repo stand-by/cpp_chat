@@ -19,6 +19,7 @@ public:
 	UserList();
 	~UserList();
 	void read_json();
+	void clear_json();
 	//method for debug purposes
 	void print_json();
 };

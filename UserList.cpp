@@ -10,6 +10,11 @@ void UserList::read_json() {
 	if(input.is_open()) input.close();
 }
 
+void UserList::clear_json() { 
+	if (!userlist.empty())
+		userlist.clear(); 
+}
+
 void UserList::print_json() {
 	cout << userlist << endl;
 }
