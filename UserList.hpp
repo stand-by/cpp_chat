@@ -18,6 +18,7 @@ private:
 	//ifstream userlist_in;
 	//ofstream userlist_out;
 
+	//TO-DO: may be add some private method which returns username object out from whole list!!!
 public:
 	UserList();
 	~UserList();
@@ -27,6 +28,7 @@ public:
 	//method for debug purposes
 	void print_json();
 	void add_user(string username, string password);
+	void add_thread(string username, int thread);
 	bool check_existance(string username);
 	bool check_thread(string username, int thread);
 };
