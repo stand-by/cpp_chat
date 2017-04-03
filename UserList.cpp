@@ -31,3 +31,12 @@ void UserList::clear_json() {
 void UserList::print_json() {
 	cout << userlist << endl;
 }
+
+void UserList::add_user(string username, string password) {
+	json new_user = json({});
+	new_user["username"] = username;
+	new_user["password"] = password;
+	new_user["threads"] = json::array();
+	
+	userlist.push_back(new_user);
+}
