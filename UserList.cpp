@@ -33,13 +33,14 @@ void UserList::print_json() {
 }
 
 void UserList::add_user(string username, string password) {
-	//CHECK EXISTANCE HERE
-	json new_user = json({});
-	new_user["username"] = username;
-	new_user["password"] = password;
-	new_user["threads"] = json::array();
+	if(!check_existance(username)) {
+		json new_user = json({});
+		new_user["username"] = username;
+		new_user["password"] = password;
+		new_user["threads"] = json::array();
 
-	userlist.push_back(new_user);
+		userlist.push_back(new_user);
+	}
 }
 
 bool UserList::check_existance(string username) {
