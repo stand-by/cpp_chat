@@ -25,4 +25,5 @@ public:
 	//method for debug purposes
 	void print_json();
 	void add_user(string username, string password);
+	bool check_existance(string username);
 };
