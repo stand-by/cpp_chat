@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 
 project(cpp_chat)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
+set(SOURCE_LIB UserList.cpp)
+add_library(UserList STATIC ${SOURCE_LIB})
 
 add_executable(main main.cpp)
+
+target_link_libraries(main UserList)

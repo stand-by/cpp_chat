@@ -2,6 +2,7 @@
 # Prerequisites
 *.d
 main.cpp
+main
 
 # Compiled Object files
 *.slo
