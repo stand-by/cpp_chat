@@ -55,7 +55,7 @@ void UserList::add_thread(string username, int thread) {
 bool UserList::check_existance(string username) {
 	bool is_exist = false;
 
-	for (json::iterator it = userlist.begin(); it != userlist.end(); ++it) {
+	for(json::iterator it = userlist.begin(); it != userlist.end(); ++it) {
   		if((*it)["username"]==username) {
   			is_exist = true;
   			break;
@@ -68,7 +68,7 @@ bool UserList::check_existance(string username) {
 bool UserList::check_thread(string username, int thread) {
 	bool is_exist = false;
 
-	for (json::iterator it = userlist.begin(); it != userlist.end(); ++it) {
+	for(json::iterator it = userlist.begin(); it != userlist.end(); ++it) {
   		if((*it)["username"]==username) {
   			vector<int> threads =  (*it)["threads"].get<std::vector<int> >();
   			if(std::find(threads.begin(), threads.end(), thread) != threads.end()) {
@@ -79,4 +79,11 @@ bool UserList::check_thread(string username, int thread) {
   	}
 
   	return is_exist;
+}
+
+bool UserList::check_username_password(string username, string password) {
+	for(json::iterator it = userlist.begin(); it != userlist.end(); ++it)
+  		if((*it)["username"]==username && (*it)["password"]==password) 
+  			return true; 
+  	return false;
 }

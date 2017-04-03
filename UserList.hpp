@@ -31,4 +31,5 @@ public:
 	void add_thread(string username, int thread);
 	bool check_existance(string username);
 	bool check_thread(string username, int thread);
+	bool check_username_password(string username, string password);
 };
