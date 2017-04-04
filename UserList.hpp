@@ -14,11 +14,7 @@ class UserList {
 private:
 	json userlist;
 	string filename;
-	//TO-DO: it looks like we don't need members above
-	//ifstream userlist_in;
-	//ofstream userlist_out;
 
-	//TO-DO: may be add some private method which returns username object out from whole list!!!
 public:
 	UserList();
 	~UserList();

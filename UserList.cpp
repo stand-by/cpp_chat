@@ -1,8 +1,10 @@
 #include "UserList.hpp"
 
-UserList::UserList(): userlist(json::array()), filename("userlist.txt") {};
+UserList::UserList(): userlist(json::array()), filename("userlist.txt") {}
 
-UserList::~UserList() {};
+UserList::~UserList() { write_json(); }
+
+void UserList::print_json() { cout << userlist << endl; }
 
 void UserList::read_json() {
 	ifstream input;
@@ -28,10 +30,6 @@ void UserList::clear_json() {
 		userlist.clear(); 
 }
 
-void UserList::print_json() {
-	cout << userlist << endl;
-}
-
 void UserList::add_user(string username, string password) {
 	if(!check_username(username)) {
 		json new_user = json({});
@@ -46,8 +44,10 @@ void UserList::add_user(string username, string password) {
 void UserList::add_thread(string username, int thread) {
 	if(check_username(username) && !check_thread(username, thread)) {
 		for (json::iterator it = userlist.begin(); it != userlist.end(); ++it) {
-  			if((*it)["username"]==username) 
+  			if((*it)["username"]==username) {
 				(*it)["threads"].push_back(thread);
+				break;
+  			}
 		}
 	}
 }
