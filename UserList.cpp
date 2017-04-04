@@ -33,7 +33,7 @@ void UserList::print_json() {
 }
 
 void UserList::add_user(string username, string password) {
-	if(!check_existance(username)) {
+	if(!check_username(username)) {
 		json new_user = json({});
 		new_user["username"] = username;
 		new_user["password"] = password;
@@ -44,7 +44,7 @@ void UserList::add_user(string username, string password) {
 }
 
 void UserList::add_thread(string username, int thread) {
-	if(check_existance(username) && !check_thread(username, thread)) {
+	if(check_username(username) && !check_thread(username, thread)) {
 		for (json::iterator it = userlist.begin(); it != userlist.end(); ++it) {
   			if((*it)["username"]==username) 
 				(*it)["threads"].push_back(thread);
@@ -52,7 +52,7 @@ void UserList::add_thread(string username, int thread) {
 	}
 }
 
-bool UserList::check_existance(string username) {
+bool UserList::check_username(string username) {
 	bool is_exist = false;
 
 	for(json::iterator it = userlist.begin(); it != userlist.end(); ++it) {
