@@ -5,6 +5,10 @@ JsonWrapper("msg_threads/"+std::to_string(id)+".json"),
 thread_id(id), amount_messages_to_hold(amount), amount_messages_shifted(0)
 {}
 
+int MessageThread::get_thread_id() {
+	return thread_id;
+}
+
 void MessageThread::read_json() {
 	JsonWrapper::read_json();
 
