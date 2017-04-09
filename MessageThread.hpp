@@ -7,4 +7,6 @@ private:
 	int amount_messages_shifted;
 public:
 	MessageThread(int id, int amount);
+	void read_json();
+	void read_whole_json();
 };
