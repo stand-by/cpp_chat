@@ -21,3 +21,17 @@ void MessageThread::read_json() {
 void MessageThread::read_whole_json() {
 	JsonWrapper::read_json();
 }
+
+string MessageThread::get_whole_jsonbuffer() {
+	return json_file.dump();
+}
+
+string MessageThread::get_jsonbuffer_start_from(int msg_id) {
+	json temp = json::array();
+	for (json::iterator it = json_file.begin(); it != json_file.end(); ++it) {
+		if((*it)["id"].get<int>() > msg_id) {
+			temp.push_back(*it);
+		}
+	}
+	return temp.dump();
+}
