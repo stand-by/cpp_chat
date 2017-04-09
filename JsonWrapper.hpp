@@ -9,7 +9,7 @@ using namespace std;
 using namespace nlohmann;
 
 class JsonWrapper {
-private:
+protected:
 	json json_file;
 	string filename;
 
