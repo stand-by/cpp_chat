@@ -19,5 +19,5 @@ public:
 
 	//validate id of pushed msg and check if it has necessary fields before inserting
 	//and shift first message to keep amount_messages_to_hold right
-	void push_message(string msg_json);
+	void push_message(string username, string ip, string body);
 };
