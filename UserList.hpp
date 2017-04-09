@@ -1,28 +1,11 @@
 #include <algorithm>
-#include <iostream>
-#include <iomanip>
-#include <fstream>
 #include <string>
 #include <vector>
-#include "nlohmann_json/json.hpp"
+#include "JsonWrapper.hpp"
 
-using namespace std;
-using namespace nlohmann;
-//TO-DO: remove iostream
-
-class UserList {
-private:
-	json userlist;
-	string filename;
-
+class UserList: public JsonWrapper {
 public:
 	UserList();
-	~UserList();
-	void read_json();
-	void write_json();
-	void clear_json();
-	//method for debug purposes
-	void print_json();
 	void add_user(string username, string password);
 	void add_thread(string username, int thread);
 	bool check_username(string username);
