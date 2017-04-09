@@ -14,4 +14,9 @@ public:
 
 	string get_whole_jsonbuffer();
 	string get_jsonbuffer_start_from(int msg_id);
+	int get_amount_messages_jsonbuffer();
+
+	//validate id of pushed msg and check if it has necessary fields before inserting
+	//and shift first message to keep amount_messages_to_hold right
+	void push_message(string msg_json);
 };

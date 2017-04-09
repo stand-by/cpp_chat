@@ -35,3 +35,12 @@ string MessageThread::get_jsonbuffer_start_from(int msg_id) {
 	}
 	return temp.dump();
 }
+
+int MessageThread::get_amount_messages_jsonbuffer(){
+	return json_file.size();
+}
+
+void MessageThread::push_message(string msg_json) {
+	json msg = json::parse(msg_json);
+	json_file.push_back(msg);
+}
