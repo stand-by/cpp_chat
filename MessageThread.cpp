@@ -55,10 +55,9 @@ int MessageThread::get_amount_messages_jsonbuffer(){
 
 void MessageThread::push_message(string username, string ip, string body) {
 	json msg_json = json({});
-	//cout << "lol" << endl;
-	msg_json["id"] = (*(json_file.end()-1))["id"].get<int>()+1;
-	//cout << "lol" << endl;
-	//cout << msg_json << endl;
+
+	if(get_amount_messages_jsonbuffer()==0) msg_json["id"] = 0;
+	else msg_json["id"] = (*(json_file.end()-1))["id"].get<int>()+1;
 	msg_json["ip"] = ip;
 	msg_json["username"] = username;
 	msg_json["datetime"] = currentDateTime();
