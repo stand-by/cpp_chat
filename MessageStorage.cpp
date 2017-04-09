@@ -13,3 +13,10 @@ void MessageStorage::connect_thread(int id) {
 		threads.push_back(t);
 	}
 }
+
+void MessageStorage::push_message_to_thread(int thread_id, string msg_json) {
+	connect_thread(thread_id);
+
+	for (int i = 0; i < threads.size(); i++) 
+		if(threads[i].get_thread_id() == thread_id) threads[i].push_message(msg_json);
+}
