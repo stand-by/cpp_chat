@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include "nlohmann_json/json.hpp"
 
 using namespace std;
 using namespace nlohmann;
@@ -19,4 +20,4 @@ public:
 	void write_json();
 	void clear_json();
 	void print_json();
-}
+};

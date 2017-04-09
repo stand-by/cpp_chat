@@ -5,7 +5,10 @@ project(cpp_chat)
 
 set(SOURCE_LIB UserList.cpp)
 add_library(UserList STATIC ${SOURCE_LIB})
+set(SOURCE_LIB JsonWrapper.cpp)
+add_library(JsonWrapper STATIC ${SOURCE_LIB})
 
 add_executable(main main.cpp)
 
 target_link_libraries(main UserList)
+target_link_libraries(main JsonWrapper)
