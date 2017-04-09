@@ -1,5 +1,14 @@
 #include "MessageThread.hpp"
 
+ const string currentDateTime() {
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[80];
+    tstruct = *localtime(&now);
+    strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
+    return buf;
+}
+
 MessageThread::MessageThread(int id, int amount): 
 JsonWrapper("msg_threads/"+std::to_string(id)+".json"),
 thread_id(id), amount_messages_to_hold(amount), amount_messages_shifted(0)
@@ -44,7 +53,16 @@ int MessageThread::get_amount_messages_jsonbuffer(){
 	return json_file.size();
 }
 
-void MessageThread::push_message(string msg_json) {
-	json msg = json::parse(msg_json);
-	json_file.push_back(msg);
+void MessageThread::push_message(string username, string ip, string body) {
+	json msg_json = json({});
+	//cout << "lol" << endl;
+	msg_json["id"] = (*(json_file.end()-1))["id"].get<int>()+1;
+	//cout << "lol" << endl;
+	//cout << msg_json << endl;
+	msg_json["ip"] = ip;
+	msg_json["username"] = username;
+	msg_json["datetime"] = currentDateTime();
+	msg_json["body"] = body;
+
+	json_file.push_back(msg_json);
 }
