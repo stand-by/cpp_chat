@@ -8,6 +8,7 @@ private:
 public:
 	MessageThread(int id, int amount);
 	
+	int get_thread_id();
 	//need to implement appropriate write method(to append), because we will lose data
 	void read_json();
 	void read_whole_json();
