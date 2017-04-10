@@ -18,5 +18,5 @@ void ServerDirector::receive_data() {
 	data.resize(data_size);
 
 	acceptor >> data;
-	received_data = data;
+	received_data = json::parse(data);
 }
