@@ -1,3 +1,6 @@
+#ifndef USERLIST_HPP
+#define USERLIST_HPP
+
 #include <algorithm>
 #include <string>
 #include <vector>
@@ -12,3 +15,5 @@ public:
 	bool check_thread(string username, int thread);
 	bool check_username_password(string username, string password);
 };
+
+#endif

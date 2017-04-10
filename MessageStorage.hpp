@@ -1,3 +1,6 @@
+#ifndef MESSAGESTORAGE_HPP
+#define MESSAGESTORAGE_HPP
+
 #include "MessageThread.hpp"
 
 class MessageStorage {
@@ -16,3 +19,5 @@ public:
 
 	string get_buffered_messages_since(int thread_id, int msg_id);
 };
+
+#endif

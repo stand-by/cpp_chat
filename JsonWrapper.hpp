@@ -1,3 +1,6 @@
+#ifndef JSONWRAPPER_HPP
+#define JSONWRAPPER_HPP
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -21,3 +24,5 @@ public:
 	void clear_json();
 	void print_json();
 };
+
+#endif

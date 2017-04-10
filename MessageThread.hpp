@@ -1,3 +1,6 @@
+#ifndef MESSAGETHREAD_HPP
+#define MESSAGETHREAD_HPP
+
 #include "JsonWrapper.hpp"
 
 class MessageThread: public JsonWrapper {
@@ -21,3 +24,5 @@ public:
 	//and shift first message to keep amount_messages_to_hold right
 	void push_message(string username, string ip, string body);
 };
+
+#endif
