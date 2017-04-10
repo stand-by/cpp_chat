@@ -8,11 +8,12 @@
 class ServerDirector {
 private:
 	ServerSocket listener;
-	ServerSocket acceptor;
 	UserList userlist;
 	MessageStorage msg_storage;
+	string received_data;
 public:
 	ServerDirector(int port_to_listen);
+	void receive_data();
 };
 
 #endif
