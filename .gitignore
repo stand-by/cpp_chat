@@ -3,8 +3,8 @@
 *.d
 main.cpp
 main
-mock_client.cpp
 mock_client
+mock_client.cpp
 
 # Compiled Object files
 *.slo
