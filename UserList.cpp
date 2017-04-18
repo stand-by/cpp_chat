@@ -59,3 +59,21 @@ bool UserList::check_username_password(string username, string password) {
   			return true; 
   	return false;
 }
+
+json UserList::get_threads_info() {
+	set<int> unique_threads;
+	for(json::iterator it = json_file.begin(); it != json_file.end(); ++it)
+		for(json::iterator jt = (*it)["threads"].begin(); jt != (*it)["threads"].end(); ++jt)
+			unique_threads.insert((*jt).get<int>());
+
+	json threads = json::object();
+	for(set<int>::iterator it = unique_threads.begin(); it != unique_threads.end(); ++it)
+		threads[to_string(*it)] = json::array();
+
+	for(json::iterator it = json_file.begin(); it != json_file.end(); ++it) {
+		for(json::iterator jt = (*it)["threads"].begin(); jt != (*it)["threads"].end(); ++jt)
+			threads[to_string((*jt).get<int>())].push_back((*it)["username"]);
+	}
+
+	return threads;
+}
