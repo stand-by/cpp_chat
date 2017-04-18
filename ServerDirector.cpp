@@ -17,8 +17,16 @@ void ServerDirector::handle_request() {
 	string request = wait_request_at_socket(acceptor);	
 
 	//error test
-	string response = get_messages_response(1,10);
+	string response = get_success_response("lol");
 	acceptor << response;
+	//be sure that user belongs to thread when calling get_messages_response
+}
+
+string ServerDirector::get_success_response(string body) {
+	json success_response;
+	success_response["response"] = "ok";
+	success_response["body"] = body;	
+	return success_response.dump();
 }
 
 string ServerDirector::get_error_response(string body) {
