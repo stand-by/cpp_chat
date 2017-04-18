@@ -25,12 +25,23 @@ void ServerDirector::handle_request() {
 		if(!userlist.check_username(username)) {
 			userlist.add_user(username, password);
 			acceptor << get_info_response();
+
 		} else if(userlist.check_username_password(username,password)) {
 			acceptor << get_info_response();
+
 		} else {
 			acceptor << get_error_response("incorrect password for this user");
 		}
-	} else if(false) {
+
+	} else if(command=="get_thread") {
+		int thread_id = request["thread"].get<int>();
+		
+		if(userlist.check_username_password(username,password)) {
+			userlist.add_thread(username, thread_id);
+			acceptor << get_messages_response(thread_id, -1);
+		} else {
+			acceptor << get_error_response("authentication problem");
+		}
 
 	} else if(false) {
 
