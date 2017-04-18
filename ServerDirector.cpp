@@ -10,3 +10,12 @@ string ServerDirector::wait_request_at_socket(ServerSocket& acceptor) {
 
 	return data_stream.str();
 }
+
+void ServerDirector::handle_request() {
+	ServerSocket acceptor;
+	string request = wait_request_at_socket(acceptor);	
+
+	//echo
+	string response = request;
+	acceptor << response;
+}

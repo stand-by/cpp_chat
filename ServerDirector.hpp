@@ -13,6 +13,7 @@ private:
 	MessageStorage msg_storage;
 public:
 	ServerDirector(int port_to_listen);
+	void handle_request();
 	string wait_request_at_socket(ServerSocket& acceptor);
 };
 
