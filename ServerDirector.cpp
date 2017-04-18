@@ -43,6 +43,16 @@ void ServerDirector::handle_request() {
 			acceptor << get_error_response("authentication problem");
 		}
 
+	} else if(command=="refresh") {
+		int thread_id = request["thread"].get<int>();
+		int msg_id = request["id"].get<int>();
+
+		if(userlist.check_username_password(username, password) && userlist.check_thread(username, thread_id)) {
+			acceptor << get_messages_response(thread_id, msg_id);
+		} else {
+			acceptor << get_error_response("authentication problem");
+		}
+		
 	} else if(false) {
 
 	} else {
