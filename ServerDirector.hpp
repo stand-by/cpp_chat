@@ -4,16 +4,16 @@
 #include "SocketClasses/ServerSocket.hpp"
 #include "UserList.hpp"
 #include "MessageStorage.hpp"
+#include <sstream>
 
 class ServerDirector {
 private:
 	ServerSocket listener;
 	UserList userlist;
 	MessageStorage msg_storage;
-	json received_data;
 public:
 	ServerDirector(int port_to_listen);
-	void receive_data();
+	string wait_request_at_socket(ServerSocket& acceptor);
 };
 
 #endif

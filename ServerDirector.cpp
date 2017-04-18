@@ -2,21 +2,11 @@
 
 ServerDirector::ServerDirector(int port_to_listen): listener(port_to_listen) {}
 
-void ServerDirector::receive_data() {
-	ServerSocket acceptor;
+string ServerDirector::wait_request_at_socket(ServerSocket& acceptor) {
 	listener.acceptConnection(acceptor);
 	
-	string info;
-	info.resize(1024);
-	acceptor >> info;
+	stringstream data_stream;
+	acceptor >> data_stream;
 
-	int data_size = json::parse(info)["size"].get<int>();
-
-	acceptor << "ok";
-
-	string data;
-	data.resize(data_size);
-
-	acceptor >> data;
-	received_data = json::parse(data);
+	return data_stream.str();
 }
