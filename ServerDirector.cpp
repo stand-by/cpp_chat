@@ -15,7 +15,14 @@ void ServerDirector::handle_request() {
 	ServerSocket acceptor;
 	string request = wait_request_at_socket(acceptor);	
 
-	//echo
-	string response = request;
+	//error test
+	string response = get_error_response("You are so wrong.");
 	acceptor << response;
+}
+
+string ServerDirector::get_error_response(string body) {
+	json error_response;
+	error_response["response"] = "error";
+	error_response["body"] = body;	
+	return error_response.dump();
 }
