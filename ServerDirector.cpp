@@ -52,14 +52,21 @@ void ServerDirector::handle_request() {
 		} else {
 			acceptor << get_error_response("authentication problem");
 		}
+
+	} else if(command=="write") {
+		int thread_id = request["thread"].get<int>();
+		string text = request["body"].get<string>();
 		
-	} else if(false) {
+		if(userlist.check_username_password(username, password) && userlist.check_thread(username, thread_id)) {
+			msg_storage.push_message_to_thread(thread_id, username, acceptor.getLastClientIP(), text);
+			acceptor << get_success_response();
+		} else {
+			acceptor << get_error_response("authentication problem");
+		}
 
 	} else {
 		acceptor << get_error_response("some unexpected shit happened");
 	}
-	//do not forget to create and connect threads
-	//be sure that user belongs to thread when calling get_messages_response
 }
 
 string ServerDirector::get_success_response(string body) {
