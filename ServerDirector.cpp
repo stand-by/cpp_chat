@@ -1,6 +1,8 @@
 #include "ServerDirector.hpp"
 
-ServerDirector::ServerDirector(int port_to_listen): listener(port_to_listen) {}
+ServerDirector::ServerDirector(int port_to_listen): listener(port_to_listen) {
+	userlist.read_json();
+}
 
 string ServerDirector::wait_request_at_socket(ServerSocket& acceptor) {
 	listener.acceptConnection(acceptor);
@@ -12,13 +14,30 @@ string ServerDirector::wait_request_at_socket(ServerSocket& acceptor) {
 }
 
 void ServerDirector::handle_request() {
-	userlist.read_json();
 	ServerSocket acceptor;
-	string request = wait_request_at_socket(acceptor);	
+	json request = json::parse(wait_request_at_socket(acceptor));	
 
-	//error test
-	string response = get_success_response("lol");
-	acceptor << response;
+	string command = request["command"].get<string>();
+	string username = request["username"].get<string>();
+	string password = request["password"].get<string>();
+
+	if(command=="login") {
+		if(!userlist.check_username(username)) {
+			userlist.add_user(username, password);
+			acceptor << get_info_response();
+		} else if(userlist.check_username_password(username,password)) {
+			acceptor << get_info_response();
+		} else {
+			acceptor << get_error_response("incorrect password for this user");
+		}
+	} else if(false) {
+
+	} else if(false) {
+
+	} else {
+		acceptor << get_error_response("some unexpected shit happened");
+	}
+	//do not forget to create and connect threads
 	//be sure that user belongs to thread when calling get_messages_response
 }
 
