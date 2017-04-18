@@ -26,3 +26,10 @@ string ServerDirector::get_error_response(string body) {
 	error_response["body"] = body;	
 	return error_response.dump();
 }
+
+string ServerDirector::get_info_response() {
+	json info;
+	info["response"] = "ok";
+
+	json threads = json::array();
+}
