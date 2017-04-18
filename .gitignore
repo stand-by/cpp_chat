@@ -5,6 +5,7 @@ main.cpp
 main
 mock_client
 mock_client.cpp
+userlist.txt
 
 # Compiled Object files
 *.slo

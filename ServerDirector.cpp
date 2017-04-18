@@ -12,11 +12,12 @@ string ServerDirector::wait_request_at_socket(ServerSocket& acceptor) {
 }
 
 void ServerDirector::handle_request() {
+	userlist.read_json();
 	ServerSocket acceptor;
 	string request = wait_request_at_socket(acceptor);	
 
 	//error test
-	string response = get_error_response("You are so wrong.");
+	string response = get_info_response();
 	acceptor << response;
 }
 
@@ -30,6 +31,6 @@ string ServerDirector::get_error_response(string body) {
 string ServerDirector::get_info_response() {
 	json info;
 	info["response"] = "ok";
-
-	json threads = json::array();
+	info["threads"] = userlist.get_threads_info();
+	return info.dump();
 }
