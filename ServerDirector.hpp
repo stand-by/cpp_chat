@@ -17,6 +17,7 @@ public:
 	string wait_request_at_socket(ServerSocket& acceptor);
 	string get_error_response(string body);
 	string get_info_response();
+	string get_messages_response(int thread, int id_since);
 };
 
 #endif

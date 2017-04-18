@@ -6,6 +6,7 @@ main
 mock_client
 mock_client.cpp
 userlist.txt
+msg_threads
 
 # Compiled Object files
 *.slo

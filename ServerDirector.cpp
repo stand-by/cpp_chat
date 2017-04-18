@@ -17,7 +17,7 @@ void ServerDirector::handle_request() {
 	string request = wait_request_at_socket(acceptor);	
 
 	//error test
-	string response = get_info_response();
+	string response = get_messages_response(1,10);
 	acceptor << response;
 }
 
@@ -31,6 +31,20 @@ string ServerDirector::get_error_response(string body) {
 string ServerDirector::get_info_response() {
 	json info;
 	info["response"] = "ok";
-	info["threads"] = userlist.get_threads_info();
+	info["body"] = userlist.get_threads_info();
 	return info.dump();
+}
+
+string ServerDirector::get_messages_response(int thread, int id_since) {
+	msg_storage.connect_thread(thread);
+
+	json messages;
+	messages["response"] = "ok";
+
+	if(id_since < 0)  
+		messages["body"] = json::parse(msg_storage.get_buffered_messages(thread));
+	else 
+		messages["body"] = json::parse(msg_storage.get_buffered_messages_since(thread, id_since));
+
+	return messages.dump();
 }
