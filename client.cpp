@@ -11,6 +11,8 @@ string get_password();
 bool login(string ip, string username, string password);
 json get_thread(int thread_id, string ip, string username, string password);
 tuple<int,string> parse_json_with_messages(json data);
+void send_msg(int thread_id, string ip, string msg, string username, string password);
+json refresh_messages(int thread_id, string ip, int last_msg_id, string username, string password);
 
 int main(int argc, char const *argv[]) {
     system("clear");
@@ -43,14 +45,64 @@ int main(int argc, char const *argv[]) {
     json threads = get_thread(thread_id, ip, username, password)["body"];
     tie(last_msg_id, msg_stream) = parse_json_with_messages(threads);
 
+    for(;;) {
+        string msg;
+        cout << username << " > ";
+        getline(cin, msg);
+
+        if(msg != "/update") send_msg(thread_id, ip, msg, username, password);
+        json messages = refresh_messages(thread_id, ip, last_msg_id, username, password)["body"];
+        string temp;
+        tie(last_msg_id, temp) = parse_json_with_messages(messages);
+        msg_stream += temp;
+
+        system("clear");
+        cout << msg_stream;
+        msg.clear();
+    }
+
     return 0;
+}
+
+json refresh_messages(int thread_id, string ip, int last_msg_id, string username, string password) {
+    json req;
+    req["username"] = username;
+    req["password"] = password;
+    req["command"] = "refresh";
+    req["thread"] = thread_id;
+    req["id"] = last_msg_id;
+
+    ClientSocket socket(ip, 8888);
+    socket << req.dump();
+
+    stringstream response;
+    socket >> response;
+    json resp = json::parse(response.str());
+    return resp;
+}
+
+void send_msg(int thread_id, string ip, string msg, string username, string password) {
+    json req;
+    req["username"] = username;
+    req["password"] = password;
+    req["command"] = "write";
+    req["thread"] = thread_id;
+    req["body"] = msg;
+
+    ClientSocket socket(ip, 8888);
+    socket << req.dump();
+
+    stringstream response;
+    socket >> response;
+    json resp = json::parse(response.str());
+    cout << resp << endl;
 }
 
 tuple<int,string> parse_json_with_messages(json data) {
     int last_msg_id = -1;
     stringstream stream;
     for(json::iterator it = data.begin(); it != data.end(); ++it) {
-        stream << (*it)["datetime"]  << " [" << (*it)["username"] << "] " << "> " << (*it)["body"] << endl;
+        stream << (*it)["datetime"].get<string>()  << " [" << (*it)["username"].get<string>() << "] " << "> " << (*it)["body"].get<string>() << endl;
         last_msg_id = (*it)["id"];
     }
     return make_tuple(last_msg_id,stream.str());
