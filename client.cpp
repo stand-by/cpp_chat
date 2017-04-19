@@ -7,6 +7,7 @@
 using json = nlohmann::json;
 
 string get_password();
+bool login(string ip, string username, string password);
 
 int main(int argc, char const *argv[]) {
     if(argc <= 1) {
@@ -22,22 +23,9 @@ int main(int argc, char const *argv[]) {
     cout << "password > ";
     password = get_password();
 
-    /*
-    json credentials;
-    credentials["username"] = argv[1];
-    credentials["password"] = argv[2];
-    credentials["command"] = "login";
-    req["body"] = "oh shit, maaan!";
-    req["thread"] = 1;
-    req["id"] = 3;
+    if(!login(ip, username, password)) return -1;
+    cout << "[*] " << "logged in or registered new" << endl;
 
-    ClientSocket cli("127.0.0.1", 8888);
-    cli << req.dump();
-
-    stringstream stream;
-    cli >> stream;
-    cout << stream.str() << endl;
-    */
     return 0;
 }
 
@@ -53,4 +41,32 @@ string get_password() {
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     cout << endl;
     return password;
+}
+
+bool login(string ip, string username, string password) {
+    ClientSocket cli(ip, 8888);
+
+    json req;
+    req["username"] = username;
+    req["password"] = password;
+    req["command"] = "login";
+    cli << req.dump();
+
+    stringstream response;
+    cli >> response;
+    json resp = json::parse(response.str());
+
+    if(resp["response"] == "ok") {
+        for(json::iterator it = resp["body"]["threads_id"].begin(); it != resp["body"]["threads_id"].end(); ++it) {
+            string str = to_string((*it).get<int>());
+            cout << "Users for thread #" << str << ": ";// << resp["body"]["threads"][str] << endl;
+            for(json::iterator jt = resp["body"]["threads"][str].begin(); jt != resp["body"]["threads"][str].end(); ++jt)
+                cout << (*jt).get<string>() << ", ";
+            cout << endl;
+        }
+        return true;
+    } else {
+        cout << "[*] " << resp["body"].get<string>() << endl;
+        return false;
+    }
 }

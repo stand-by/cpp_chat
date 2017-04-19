@@ -75,5 +75,10 @@ json UserList::get_threads_info() {
 			threads[to_string((*jt).get<int>())].push_back((*it)["username"]);
 	}
 
-	return threads;
+	json wrapper = json::object();
+	json threads_id(unique_threads);
+	wrapper["threads_id"] = threads_id;
+	wrapper["threads"] = threads;
+
+	return wrapper;
 }
