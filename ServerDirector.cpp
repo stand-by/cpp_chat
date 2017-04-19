@@ -16,6 +16,7 @@ string ServerDirector::wait_request_at_socket(ServerSocket& acceptor) {
 void ServerDirector::handle_request() {
 	ServerSocket acceptor;
 	json request = json::parse(wait_request_at_socket(acceptor));	
+	cout << request << endl;
 
 	string command = request["command"].get<string>();
 	string username = request["username"].get<string>();

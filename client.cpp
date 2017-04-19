@@ -1,5 +1,6 @@
 #include "nlohmann_json/json.hpp"
 #include "SocketClasses/ClientSocket.hpp"
+#include <tuple>
 #include <string>
 #include <sstream>
 #include <termios.h>
@@ -8,8 +9,11 @@ using json = nlohmann::json;
 
 string get_password();
 bool login(string ip, string username, string password);
+json get_thread(int thread_id, string ip, string username, string password);
+tuple<int,string> parse_json_with_messages(json data);
 
 int main(int argc, char const *argv[]) {
+    system("clear");
     if(argc <= 1) {
       cout << "you should specify server ip as argument (for instance ./client 192.168.0.1)" << endl;
       return -1;
@@ -17,6 +21,8 @@ int main(int argc, char const *argv[]) {
     string ip = argv[1];
     string username; 
     string password; 
+
+    //handle error inputs and responses with status 'error'
 
     cout << "username > ";
     cin >> username;
@@ -26,7 +32,45 @@ int main(int argc, char const *argv[]) {
     if(!login(ip, username, password)) return -1;
     cout << "[*] " << "logged in or registered new" << endl;
 
+    int thread_id;
+    cout << "choose thread to join > ";
+    cin >> thread_id;
+    cout << thread_id << endl;
+
+    system("clear");
+    int last_msg_id = -1;
+    string msg_stream;
+    json threads = get_thread(thread_id, ip, username, password)["body"];
+    tie(last_msg_id, msg_stream) = parse_json_with_messages(threads);
+
     return 0;
+}
+
+tuple<int,string> parse_json_with_messages(json data) {
+    int last_msg_id = -1;
+    stringstream stream;
+    for(json::iterator it = data.begin(); it != data.end(); ++it) {
+        stream << (*it)["datetime"]  << " [" << (*it)["username"] << "] " << "> " << (*it)["body"] << endl;
+        last_msg_id = (*it)["id"];
+    }
+    return make_tuple(last_msg_id,stream.str());
+}
+
+json get_thread(int thread_id, string ip, string username, string password) {
+    ClientSocket socket(ip, 8888);
+
+    json req;
+    req["username"] = username;
+    req["password"] = password;
+    req["command"] = "get_thread";
+    req["thread"] = thread_id;
+    socket << req.dump();
+
+    stringstream response;
+    socket >> response;
+    json resp = json::parse(response.str());
+
+    return resp;
 }
 
 string get_password() {
@@ -44,16 +88,16 @@ string get_password() {
 }
 
 bool login(string ip, string username, string password) {
-    ClientSocket cli(ip, 8888);
+    ClientSocket socket(ip, 8888);
 
     json req;
     req["username"] = username;
     req["password"] = password;
     req["command"] = "login";
-    cli << req.dump();
+    socket << req.dump();
 
     stringstream response;
-    cli >> response;
+    socket >> response;
     json resp = json::parse(response.str());
 
     if(resp["response"] == "ok") {

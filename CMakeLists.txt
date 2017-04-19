@@ -19,7 +19,6 @@ set(SOURCE_LIB SocketClasses/ServerSocket.cpp)
 add_library(ServerSocket STATIC ${SOURCE_LIB})
 
 add_executable(main main.cpp)
-add_executable(mock_client mock_client.cpp)
 add_executable(client client.cpp)
 
 target_link_libraries(main ServerDirector)
@@ -29,5 +28,4 @@ target_link_libraries(main UserList)
 target_link_libraries(main JsonWrapper)
 target_link_libraries(main ServerSocket)
 
-target_link_libraries(mock_client ClientSocket)
 target_link_libraries(client ClientSocket)
