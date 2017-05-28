@@ -8,11 +8,11 @@
 using json = nlohmann::json;
 
 string get_password();
-bool login(string ip, string username, string password);
-json get_thread(int thread_id, string ip, string username, string password);
+int login(string ip, string username, string password);
+json get_thread(int thread_id, string ip, int session_id);
 tuple<int,string> parse_json_with_messages(json data);
-void send_msg(int thread_id, string ip, string msg, string username, string password);
-json refresh_messages(int thread_id, string ip, int last_msg_id, string username, string password);
+void send_msg(int thread_id, string ip, string msg, int session_id);
+json refresh_messages(int thread_id, string ip, int last_msg_id, int session_id);
 
 int main(int argc, char const *argv[]) {
     system("clear");
@@ -22,7 +22,8 @@ int main(int argc, char const *argv[]) {
     }
     string ip = argv[1];
     string username; 
-    string password; 
+    string password;
+    int session_id; 
 
     //handle error inputs and responses with status 'error'
 
@@ -31,7 +32,8 @@ int main(int argc, char const *argv[]) {
     cout << "password > ";
     password = get_password();
 
-    if(!login(ip, username, password)) return -1;
+    session_id = login(ip, username, password);
+    if(session_id < 0) return -1;
     cout << "[*] " << "logged in or registered new" << endl;
 
     int thread_id;
@@ -42,7 +44,7 @@ int main(int argc, char const *argv[]) {
     system("clear");
     int last_msg_id = -1;
     string msg_stream;
-    json threads = get_thread(thread_id, ip, username, password)["body"];
+    json threads = get_thread(thread_id, ip, session_id)["body"];
     tie(last_msg_id, msg_stream) = parse_json_with_messages(threads);
 
     for(;;) {
@@ -50,8 +52,8 @@ int main(int argc, char const *argv[]) {
         cout << username << " > ";
         getline(cin, msg);
 
-        if(msg != "/update") send_msg(thread_id, ip, msg, username, password);
-        json messages = refresh_messages(thread_id, ip, last_msg_id, username, password)["body"];
+        if(msg != "/update") send_msg(thread_id, ip, msg, session_id);
+        json messages = refresh_messages(thread_id, ip, last_msg_id, session_id)["body"];
         string temp;
         tie(last_msg_id, temp) = parse_json_with_messages(messages);
         msg_stream += temp;
@@ -64,10 +66,9 @@ int main(int argc, char const *argv[]) {
     return 0;
 }
 
-json refresh_messages(int thread_id, string ip, int last_msg_id, string username, string password) {
+json refresh_messages(int thread_id, string ip, int last_msg_id, int session_id) {
     json req;
-    req["username"] = username;
-    req["password"] = password;
+    req["session_id"] = session_id;
     req["command"] = "refresh";
     req["thread"] = thread_id;
     req["id"] = last_msg_id;
@@ -81,10 +82,9 @@ json refresh_messages(int thread_id, string ip, int last_msg_id, string username
     return resp;
 }
 
-void send_msg(int thread_id, string ip, string msg, string username, string password) {
+void send_msg(int thread_id, string ip, string msg, int session_id) {
     json req;
-    req["username"] = username;
-    req["password"] = password;
+    req["session_id"] = session_id;
     req["command"] = "write";
     req["thread"] = thread_id;
     req["body"] = msg;
@@ -108,12 +108,11 @@ tuple<int,string> parse_json_with_messages(json data) {
     return make_tuple(last_msg_id,stream.str());
 }
 
-json get_thread(int thread_id, string ip, string username, string password) {
+json get_thread(int thread_id, string ip, int session_id) {
     ClientSocket socket(ip, 8888);
 
     json req;
-    req["username"] = username;
-    req["password"] = password;
+    req["session_id"] = session_id;
     req["command"] = "get_thread";
     req["thread"] = thread_id;
     socket << req.dump();
@@ -139,7 +138,7 @@ string get_password() {
     return password;
 }
 
-bool login(string ip, string username, string password) {
+int login(string ip, string username, string password) {
     ClientSocket socket(ip, 8888);
 
     json req;
@@ -160,9 +159,9 @@ bool login(string ip, string username, string password) {
                 cout << (*jt).get<string>() << ", ";
             cout << endl;
         }
-        return true;
+        return resp["session_id"].get<int>();
     } else {
         cout << "[*] " << resp["body"].get<string>() << endl;
-        return false;
+        return -1;
     }
 }
