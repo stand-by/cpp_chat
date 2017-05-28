@@ -53,7 +53,11 @@ int main(int argc, char const *argv[]) {
         string msg;
         cout << username << " > ";
         getline(cin, msg);
-
+        if(cin.bad() || cin.eof()) {
+            cout << "IO Error" << endl;
+            exit(1);
+        }
+ 
         if(msg != "/update") send_msg(thread_id, ip, msg, session_id);
         json messages = refresh_messages(thread_id, ip, last_msg_id, session_id)["body"];
         string temp;
