@@ -27,6 +27,8 @@ public:
 	string get_success_response(string body = "");
 	string get_info_response(int session_id);
 	string get_messages_response(int thread, int id_since);
+	void write_threads();
+	void write_userlist();
 };
 
 #endif

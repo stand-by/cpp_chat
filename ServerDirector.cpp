@@ -164,3 +164,11 @@ string ServerDirector::get_messages_response(int thread, int id_since) {
 
 	return messages.dump();
 }
+
+void ServerDirector::write_threads() {
+	msg_storage.save_threads();
+}
+
+void ServerDirector::write_userlist() {
+	userlist.write_json();
+}

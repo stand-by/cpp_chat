@@ -95,7 +95,7 @@ void send_msg(int thread_id, string ip, string msg, int session_id) {
     stringstream response;
     socket >> response;
     json resp = json::parse(response.str());
-    cout << resp << endl;
+    //cout << resp << endl;
 }
 
 tuple<int,string> parse_json_with_messages(json data) {

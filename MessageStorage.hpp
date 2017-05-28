@@ -18,6 +18,8 @@ public:
 	string get_buffered_messages(int thread_id);
 
 	string get_buffered_messages_since(int thread_id, int msg_id);
+
+	void save_threads();
 };
 
 #endif

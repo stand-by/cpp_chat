@@ -30,3 +30,8 @@ string MessageStorage::get_buffered_messages_since(int thread_id, int msg_id) {
 	for (int i = 0; i < threads.size(); i++) 
 		if(threads[i].get_thread_id() == thread_id) return threads[i].get_jsonbuffer_start_from(msg_id);
 }
+
+void MessageStorage::save_threads() {
+	for (int i = 0; i < threads.size(); i++)
+		threads[i].write_json();
+}
