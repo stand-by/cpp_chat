@@ -36,9 +36,11 @@ int main(int argc, char const *argv[]) {
     if(session_id < 0) return -1;
     cout << "[*] " << "logged in or registered new" << endl;
 
+    string str;
     int thread_id;
     cout << "choose thread to join > ";
-    cin >> thread_id;
+    cin >> str;
+    thread_id = std::stoi(str);
     cout << thread_id << endl;
 
     system("clear");
