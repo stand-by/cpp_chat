@@ -1,8 +1,8 @@
 ### C++ ###
 # Prerequisites
 *.d
-main.cpp
 main
+client
 mock_client
 mock_client.cpp
 userlist.txt

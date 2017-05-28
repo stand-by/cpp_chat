@@ -18,52 +18,78 @@ void ServerDirector::handle_request() {
 	json request = json::parse(wait_request_at_socket(acceptor));	
 	cout << request << endl;
 
-	string command = request["command"].get<string>();
-	string username = request["username"].get<string>();
-	string password = request["password"].get<string>();
+	string command, username, password; 
+	try {
+		command = request["command"].get<string>();
+		username = request["username"].get<string>(); //remove
+		password = request["password"].get<string>(); //remove
+	} catch(...) {
+		acceptor << get_error_response("server has received incorrect data while getting command");
+		return;
+	}
+	//retrive username and pass by id
 
 	if(command=="login") {
-		if(!userlist.check_username(username)) {
-			userlist.add_user(username, password);
-			acceptor << get_info_response();
+		try {
+			string username = request["username"].get<string>(); 
+			string password = request["password"].get<string>(); 
 
-		} else if(userlist.check_username_password(username,password)) {
-			acceptor << get_info_response();
+			if(!userlist.check_username(username)) {
+				userlist.add_user(username, password);
+				acceptor << get_info_response();
 
-		} else {
-			acceptor << get_error_response("incorrect password for this user");
+			} else if(userlist.check_username_password(username,password)) {
+				acceptor << get_info_response();
+
+			} else {
+				acceptor << get_error_response("incorrect password for this user");
+			}
+		} catch(...) {
+			acceptor << get_error_response("server has received incorrect data while getting username or password");
 		}
 
 	} else if(command=="get_thread") {
-		int thread_id = request["thread"].get<int>();
-		
-		if(userlist.check_username_password(username,password)) {
-			userlist.add_thread(username, thread_id);
-			acceptor << get_messages_response(thread_id, -1);
-		} else {
-			acceptor << get_error_response("authentication problem");
+		try {
+			int thread_id = request["thread"].get<int>();
+
+			if(userlist.check_username_password(username,password)) {
+				userlist.add_thread(username, thread_id);
+				acceptor << get_messages_response(thread_id, -1);
+			} else {
+				acceptor << get_error_response("authentication problem");
+			}
+		} catch(...) {
+			acceptor << get_error_response("server has received incorrect data while getting thread_id");
 		}
 
 	} else if(command=="refresh") {
-		int thread_id = request["thread"].get<int>();
-		int msg_id = request["id"].get<int>();
-
-		if(userlist.check_username_password(username, password) && userlist.check_thread(username, thread_id)) {
-			acceptor << get_messages_response(thread_id, msg_id);
-		} else {
-			acceptor << get_error_response("authentication problem");
+		try {
+			int thread_id = request["thread"].get<int>();
+			int msg_id = request["id"].get<int>();
+	
+			if(userlist.check_username_password(username, password) && userlist.check_thread(username, thread_id)) {
+				acceptor << get_messages_response(thread_id, msg_id);
+			} else {
+				acceptor << get_error_response("authentication problem");
+			}
+		} catch(...) {
+			acceptor << get_error_response("server has received incorrect data while getting thread_id or msg_id");
 		}
 
 	} else if(command=="write") {
-		int thread_id = request["thread"].get<int>();
-		string text = request["body"].get<string>();
-		
-		if(userlist.check_username_password(username, password) && userlist.check_thread(username, thread_id)) {
-			msg_storage.push_message_to_thread(thread_id, username, acceptor.getLastClientIP(), text);
-			acceptor << get_success_response();
-		} else {
-			acceptor << get_error_response("authentication problem");
-		}
+		try {
+			int thread_id = request["thread"].get<int>();
+			string text = request["body"].get<string>();
+	
+			if(userlist.check_username_password(username, password) && userlist.check_thread(username, thread_id)) {
+				msg_storage.push_message_to_thread(thread_id, username, acceptor.getLastClientIP(), text);
+				acceptor << get_success_response();
+			} else {
+				acceptor << get_error_response("authentication problem");
+			}
+		} catch(...) {
+			acceptor << get_error_response("server has received incorrect data while getting data for writing massage");
+		}	
 
 	} else {
 		acceptor << get_error_response("some unexpected shit happened");
