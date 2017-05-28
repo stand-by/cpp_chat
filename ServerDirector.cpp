@@ -2,6 +2,7 @@
 
 ServerDirector::ServerDirector(int port_to_listen): listener(port_to_listen) {
 	userlist.read_json();
+	session_index = 0;
 }
 
 string ServerDirector::wait_request_at_socket(ServerSocket& acceptor) {
@@ -13,6 +14,31 @@ string ServerDirector::wait_request_at_socket(ServerSocket& acceptor) {
 	return data_stream.str();
 }
 
+int ServerDirector::create_session_id(string username, string password) {
+	tuple<string,string> tpl = make_tuple(username,password);
+	
+	auto it = std::find_if(std::begin(session_map), std::end(session_map), 
+		[&](const std::pair<int, tuple<string,string> > &pair) { return pair.second == tpl; });
+	
+	if(it != session_map.end()) {
+		session_map.erase(it);
+	}
+
+	session_index++;
+	session_map[session_index] = tpl;
+	return session_index;
+}
+
+bool ServerDirector::check_session_id_existance(int id) {
+	auto it = session_map.find(id);
+	if(it != session_map.end()) return true;
+	else return false;
+}
+
+tuple<string,string> ServerDirector::get_credentials_for_session_id(int id) {
+	return session_map[id];
+}
+
 void ServerDirector::handle_request() {
 	ServerSocket acceptor;
 	json request = json::parse(wait_request_at_socket(acceptor));	
@@ -21,8 +47,6 @@ void ServerDirector::handle_request() {
 	string command, username, password; 
 	try {
 		command = request["command"].get<string>();
-		username = request["username"].get<string>(); //remove
-		password = request["password"].get<string>(); //remove
 	} catch(...) {
 		acceptor << get_error_response("server has received incorrect data while getting command");
 		return;
@@ -33,13 +57,16 @@ void ServerDirector::handle_request() {
 		try {
 			string username = request["username"].get<string>(); 
 			string password = request["password"].get<string>(); 
+			int session_id;
 
 			if(!userlist.check_username(username)) {
 				userlist.add_user(username, password);
-				acceptor << get_info_response();
+				session_id = create_session_id(username, password);
+				acceptor << get_info_response(session_id);
 
 			} else if(userlist.check_username_password(username,password)) {
-				acceptor << get_info_response();
+				session_id = create_session_id(username, password);
+				acceptor << get_info_response(session_id);
 
 			} else {
 				acceptor << get_error_response("incorrect password for this user");
@@ -51,6 +78,8 @@ void ServerDirector::handle_request() {
 	} else if(command=="get_thread") {
 		try {
 			int thread_id = request["thread"].get<int>();
+			int session_id = request["session_id"].get<int>();
+			std::tie(username, password) = get_credentials_for_session_id(session_id);
 
 			if(userlist.check_username_password(username,password)) {
 				userlist.add_thread(username, thread_id);
@@ -66,6 +95,8 @@ void ServerDirector::handle_request() {
 		try {
 			int thread_id = request["thread"].get<int>();
 			int msg_id = request["id"].get<int>();
+			int session_id = request["session_id"].get<int>();
+			std::tie(username, password) = get_credentials_for_session_id(session_id);
 	
 			if(userlist.check_username_password(username, password) && userlist.check_thread(username, thread_id)) {
 				acceptor << get_messages_response(thread_id, msg_id);
@@ -80,7 +111,9 @@ void ServerDirector::handle_request() {
 		try {
 			int thread_id = request["thread"].get<int>();
 			string text = request["body"].get<string>();
-	
+			int session_id = request["session_id"].get<int>();
+			std::tie(username, password) = get_credentials_for_session_id(session_id);
+			
 			if(userlist.check_username_password(username, password) && userlist.check_thread(username, thread_id)) {
 				msg_storage.push_message_to_thread(thread_id, username, acceptor.getLastClientIP(), text);
 				acceptor << get_success_response();
@@ -110,10 +143,11 @@ string ServerDirector::get_error_response(string body) {
 	return error_response.dump();
 }
 
-string ServerDirector::get_info_response() {
+string ServerDirector::get_info_response(int session_id) {
 	json info;
 	info["response"] = "ok";
 	info["body"] = userlist.get_threads_info();
+	info["session_id"] = session_id;
 	return info.dump();
 }
 
