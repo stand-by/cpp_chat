@@ -3,6 +3,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 
 project(cpp_chat)
 
+set(SOURCE_LIB ClientDirector.cpp)
+add_library(ClientDirector STATIC ${SOURCE_LIB})
 set(SOURCE_LIB ServerDirector.cpp)
 add_library(ServerDirector STATIC ${SOURCE_LIB})
 set(SOURCE_LIB MessageStorage.cpp)
@@ -28,4 +30,5 @@ target_link_libraries(main UserList)
 target_link_libraries(main JsonWrapper)
 target_link_libraries(main ServerSocket)
 
+target_link_libraries(client ClientDirector)
 target_link_libraries(client ClientSocket)
