@@ -3,8 +3,6 @@
 *.d
 main
 client
-userlist.txt
-msg_threads
 
 # Compiled Object files
 *.slo

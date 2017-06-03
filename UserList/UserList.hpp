@@ -6,7 +6,7 @@
 #include <vector>
 #include <map>
 #include <set>
-#include "JsonWrapper.hpp"
+#include "../JsonWrapper/JsonWrapper.hpp"
 
 class UserList: public JsonWrapper {
 public:

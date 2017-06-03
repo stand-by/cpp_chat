@@ -6,7 +6,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "nlohmann_json/json.hpp"
+#include "../nlohmann_json/json.hpp"
 
 using namespace std;
 using namespace nlohmann;

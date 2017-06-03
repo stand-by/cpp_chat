@@ -1,7 +1,7 @@
 #ifndef MESSAGETHREAD_HPP
 #define MESSAGETHREAD_HPP
 
-#include "JsonWrapper.hpp"
+#include "../JsonWrapper/JsonWrapper.hpp"
 
 class MessageThread: public JsonWrapper {
 private:

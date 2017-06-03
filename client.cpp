@@ -1,6 +1,6 @@
 #include "nlohmann_json/json.hpp"
 #include "SocketClasses/ClientSocket.hpp"
-#include "ClientDirector.hpp" 
+#include "ClientDirector/ClientDirector.hpp" 
 #include <tuple>
 #include <string>
 #include <sstream>

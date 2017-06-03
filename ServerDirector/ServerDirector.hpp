@@ -1,9 +1,9 @@
 #ifndef SERVERDIRECTOR_HPP
 #define SERVERDIRECTOR_HPP
 
-#include "SocketClasses/ServerSocket.hpp"
-#include "UserList.hpp"
-#include "MessageStorage.hpp"
+#include "../SocketClasses/ServerSocket.hpp"
+#include "../UserList/UserList.hpp"
+#include "../MessageStorage/MessageStorage.hpp"
 #include <algorithm>
 #include <sstream>
 #include <tuple>

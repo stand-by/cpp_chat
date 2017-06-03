@@ -1,8 +1,8 @@
 #ifndef CLIENTDIRECTOR_HPP
 #define CLIENTDIRECTOR_HPP
 
-#include "nlohmann_json/json.hpp"
-#include "SocketClasses/ClientSocket.hpp"
+#include "../nlohmann_json/json.hpp"
+#include "../SocketClasses/ClientSocket.hpp"
 #include <algorithm>
 #include <sstream>
 #include <tuple>

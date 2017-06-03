@@ -1,0 +1,16 @@
+[
+    {
+        "password": "qwerty",
+        "threads": [
+            42
+        ],
+        "username": "test_user"
+    },
+    {
+        "password": "qwerty",
+        "threads": [
+            42
+        ],
+        "username": "qwerty"
+    }
+]
