@@ -1,0 +1,3 @@
+[submodule "SocketClasses"]
+	path = SocketClasses
+	url = https://github.com/stand-by/SocketClasses.git
