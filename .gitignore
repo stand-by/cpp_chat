@@ -1,7 +1,7 @@
 ### C++ ###
 # Prerequisites
 *.d
-main
+server
 client
 
 # Compiled Object files
