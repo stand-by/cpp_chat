@@ -3,8 +3,6 @@
 *.d
 main
 client
-mock_client
-mock_client.cpp
 userlist.txt
 msg_threads
 
